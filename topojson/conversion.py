@@ -1,14 +1,14 @@
 from json import load, dump
 import os
 import io
+import copy
 
 from .topology import topology
 
 
 def convert(geojson, topojson=None, object_name=False, *args, **kwargs):
     if isinstance(geojson, dict):
-        input_dict = geojson
-
+        input_dict = copy.deepcopy(geojson)
     elif isinstance(geojson, str):
         assert os.path.exists(geojson)
 
@@ -26,6 +26,7 @@ def convert(geojson, topojson=None, object_name=False, *args, **kwargs):
             input_dict = {object_name: input_dict}
         else:
             input_dict = {"name": input_dict}
+            
     output_dict = topology(input_dict, *args, **kwargs)
     if isinstance(topojson, str) or isinstance(topojson, str):
         with open(topojson, "w") as f:
